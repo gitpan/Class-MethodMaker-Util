@@ -1,0 +1,7 @@
+Changes
+lib/Class/MethodMaker/Util.pm
+Makefile.PL
+MANIFEST
+README
+t/new_hash_with_init.t
+t/singleton.t

@@ -1,0 +1,92 @@
+NAME
+    Class::MethodMaker::Util - New constructor and accessor types for
+    Class::MethodMaker
+
+SYNOPSIS
+      package Log;
+      use Class::MethodMaker::Util
+        singleton => 'instance',
+        get_set   => 'filename';
+
+      package main;
+      my $log = Log->instance(filename => '/tmp/foo.log');
+      ...
+      my $log2 = Log->instance;
+      print $log2->filename;     # prints '/tmp/foo.log'
+
+    or
+
+      use Class::MethodMaker::Util
+        new_hash_with_init => 'new',
+        get_set            => [ qw/foo bar baz/ ];
+
+      sub init {
+         my $self = shift;
+         $self->SUPER::init(@_);
+         # provide defaults
+         $self->bar(66) unless defined $self->bar;
+         $self->baz('flurble') unless defined $self->baz;
+      }
+
+DESCRIPTION
+    This module extends Class::MethodMaker with new method types for
+    generating constructors and accessors. It subclasses Class::MethodMaker
+    and thus supports all of that module's method types as well.
+
+SUPPORTED METHOD TYPES
+  "new_hash_with_init"
+    Creates a constructor which, like Class::MethodMaker's "new_hash_init",
+    accepts a hash of slot-name/value pairs with which to initialize the
+    object. The slot-names are interpreted as the names of methods that can
+    be called on the object after it is created and the values are the
+    arguments to be passed to those methods. Additionally, like
+    Class::MethodMaker's "new_with_init", it afterwards calls "init()" on
+    that object propagating all arguments, before returning the object.
+
+    Takes a single string or a reference to an array of strings as its
+    argument. For each string creates a simple method that creates and
+    returns an object of the appropriate class.
+
+    This method may be called as a class method, as usual, or as in instance
+    method, in which case a new object of the same class as the instance
+    will be created.
+
+  "singleton"
+    Like "new_with_hash_init", except that it creates a constructor for a
+    singleton class, which is an class that should only have one instance
+    throughout an application. One example for a singleton class would be a
+    centralized logger or spooler. The first time the method is called, the
+    singleton instance is created. Calling the method afterwards returns
+    that same object.
+
+BUGS
+    If you find any bugs or oddities, please do inform the author.
+
+INSTALLATION
+    See perlmodinstall for information and options on installing Perl
+    modules.
+
+AVAILABILITY
+    The latest version of this module is available from the Comprehensive
+    Perl Archive Network (CPAN). Visit <http://www.perl.com/CPAN/> to find a
+    CPAN site near you. Or see
+    <http://www.perl.com/CPAN/authors/id/M/MA/MARCEL/>.
+
+VERSION
+    This document describes version 1.00 of "Class::MethodMaker::Util".
+
+AUTHOR
+    Marcel Grünauer <marcel@cpan.org>
+
+CONTRIBUTORS
+    Florian Helmberger <florian@cpan.org>
+
+COPYRIGHT
+    Copyright 2001-2003 Marcel Grünauer. All rights reserved.
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+SEE ALSO
+    Class::MethodMaker
+
